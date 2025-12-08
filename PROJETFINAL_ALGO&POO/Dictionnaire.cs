@@ -47,7 +47,7 @@ namespace PROJETFINAL_ALGO_POO
 
             for (int i = 0; i < mots.Length; i++)
             {
-                char lettre = Convert.ToChar('A' + i); 
+                char lettre = Convert.ToChar('A' + i); //commentaire
                 
                 // On s'assure que la liste n'est pas nulle
                 int nombreMots = (mots[i] != null) ? mots[i].Count : 0;
