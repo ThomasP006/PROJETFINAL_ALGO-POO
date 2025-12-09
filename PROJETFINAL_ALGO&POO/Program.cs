@@ -40,7 +40,7 @@
             Console.WriteLine(j.toString());
             Console.WriteLine("\n=== TEST TERMINÉ ===");
             
-            string nomFichier = "Mots_Francais.txt";
+            string nomFichier = @"C:\Users\mathu\Documents\GitHub\PROJETFINAL_ALGO-POO\PROJETFINAL_ALGO&POO\bin\Debug\net8.0\Mots_Français.txt";
 
             if (!File.Exists(nomFichier))
             {
