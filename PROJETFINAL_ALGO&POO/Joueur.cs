@@ -20,6 +20,11 @@ namespace PROJETFINAL_ALGO_POO
         //La création d’un joueur n’est possible que si celui-ci a un nom au départ du jeu
         public Joueur(string nom)
         {
+            if(nom==null||nom=="")
+        {
+            Console.WriteLine("Erreur : le nom du joueur est vide."); 
+            nom = "Player"; 
+        }
             this.nom = nom;  // on initalise le nom du joueur avec le nom donné en paramètre
             this.mots_trouvés = null; // la liste doit être intialisée à null
             this.scores_plateau = 0; // le score doit etre intialisé à 0 d'après l'énoncé
@@ -64,7 +69,7 @@ namespace PROJETFINAL_ALGO_POO
             {
                 if (this.mots_trouvés[i] == mot) return true;  // elle  retourne vrai si on on observe que le mot est trouvé une fois dans liste 
             }
-            return false; //elle retourne faux si arrivé à la fin du tableau on a pas tro
+            return false; //elle retourne faux si arrivé à la fin de la liste on a pas trouvé.
         }
 
     }
