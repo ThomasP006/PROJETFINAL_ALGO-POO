@@ -81,12 +81,5 @@ namespace PROJETFINAL_ALGO_POO
             }
             return false; //elle retourne faux si arrivé à la fin de la liste on a pas trouvé.
         }
-
-            for( int i = 0; i < this.mots_trouvés.Count; i++) //le for va vérifier chaque valeur de la liste pour voir si elle correspond au mot recherché
-            {
-                if (this.mots_trouvés[i] == mot) return true; // elle retourne vrai si on on observe que le mot est trouvé une fois dans liste
-            }
-            return false; //elle retourne faux si arrivé à la fin du tableau on a pas trouvé le mot
-        }
     }
 }
