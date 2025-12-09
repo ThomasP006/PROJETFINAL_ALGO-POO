@@ -41,18 +41,26 @@ namespace PROJETFINAL_ALGO_POO
         public void Add_Mot (string mot)
         {
             if (this.mots_trouvés==null) this.mots_trouvés=new List<string>(); // la liste est initialisée à null mais on ne peut pas ajouter de mot dans ce cas. 
-            //ON crée donc une nouvelle liste auquel on peut attribuer des valeurs
+            //On crée donc une nouvelle liste auquel on peut attribuer des valeurs
             this.mots_trouvés.Add(mot); // j'utilise la propriété .Add des listes pur ajouter le mot entré en paramètre
         }
         public string toString()
         {
-            string phrase = "Le joueur s'appelle : " + this.nom + "\nIl a trouvés les mots suivants:\n"; // je créée une chaine de carctère phrase dans laquelle je met le texte qui va présenter chaque valeur d'attribut 
-            for (int i = 0; i < this.mots_trouvés.Count; i++) // ce for va permettre d'énumérer chaque valeur de mot qui est compris dans le tableau.
+            string phrase = "Le joueur s'appelle : " + this.nom + "\n";
+            phrase += "Score actuel : " + this.scores_plateau + "\n";
+            phrase += "Mots trouvés : \n";
+            if (this.mots_trouvés != null && this.mots_trouvés.Count > 0)
             {
-                phrase += this.mots_trouvés[i] + "\n";
+                for (int i = 0; i < this.mots_trouvés.Count; i++)
+                {
+                    phrase += "- " + this.mots_trouvés[i] + "\n";
+                }
             }
-            phrase += "Il a pour l'instant " + this.scores_plateau + " points."; // j'ajoute dans le texte le nombre de points que le joueur a.
-            return phrase; // je retourne ensuite la chaine de caractère qui contient le texte.
+            else
+            {
+                phrase += "Aucun mot trouvé pour l'instant.\n";
+            }
+            return phrase;
         }
         public void Add_Score(int val)
         {
@@ -60,12 +68,14 @@ namespace PROJETFINAL_ALGO_POO
         }
         public bool Contient(string mot)
         {
-            for( int i = 0; i< this.mots_trouvés.Count; i++) //le for va vérifier chaque valeur de la liste pour voir si elle correspond au mot recherché
-            {
-                if (this.mots_trouvés[i] == mot) return true;  // elle  retourne vrai si on on observe que le mot est trouvé une fois dans liste 
-            }
-            return false; //elle retourne faux si arrivé à la fin du tableau on a pas tro
-        }
+            // Si la liste n'est pas encore créée, elle ne peut pas contenir le mot -> Faux
+            if (this.mots_trouvés == null) return false;
 
+            for( int i = 0; i < this.mots_trouvés.Count; i++) //le for va vérifier chaque valeur de la liste pour voir si elle correspond au mot recherché
+            {
+                if (this.mots_trouvés[i] == mot) return true; // elle retourne vrai si on on observe que le mot est trouvé une fois dans liste
+            }
+            return false; //elle retourne faux si arrivé à la fin du tableau on a pas trouvé le mot
+        }
     }
 }
