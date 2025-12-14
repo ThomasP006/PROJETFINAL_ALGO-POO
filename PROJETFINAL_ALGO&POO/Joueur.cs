@@ -13,7 +13,7 @@ namespace PROJETFINAL_ALGO_POO
     {
         // on initialise ses attributs en privés
         private string nom; // énoncé : "Un joueur est caractérisé par son nom, par les mots trouvés et les scores par plateau au cours de la partie"
-        private List <string> mots_trouvés;
+        private List<string>? mots_trouvés;
         private int scores_plateau;
 
 
@@ -35,7 +35,7 @@ namespace PROJETFINAL_ALGO_POO
         {
             get { return nom; } 
         }
-        public List <string> Mots_trouvés
+        public List<string>? Mots_trouvés
         {
             get { return mots_trouvés; }    
         }

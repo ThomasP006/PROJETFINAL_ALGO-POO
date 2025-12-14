@@ -29,7 +29,7 @@ namespace PROJETFINAL_ALGO_POO
             {
                 using (StreamReader sr = new StreamReader(cheminFichier))
                 {
-                    string ligne;
+                    string? ligne;
                     int compteurLigne = 0;
                     
                     // On lit ligne par ligne
