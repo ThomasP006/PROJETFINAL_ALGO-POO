@@ -6,46 +6,64 @@ namespace PROJETFINAL_ALGO_POO
 {
     public class Dictionnaire
     {
-        // Tableau de listes
+        // -----on initialise d'abord les attributs-----
         private List<string>[] mots;
-        
-        // On déclare le séparateur ici pour ne pas le recréer à chaque ligne lue
-        private static readonly char[] separateurs = { ' ' }; 
-
-        // Constructeur
-        public Dictionnaire(string nomFichier)
+        /**Cet attribut est un tableau de listes.
+         Chaque liste correspondera plus tard à une lettre de l'alphabet
+         Il y aura donc 26 listes au total**/
+       
+        // -----on fait le constructeur-----
+        public Dictionnaire(string nomdufichier)
         {
-            this.mots = new List<string>[26]; // 26 cases pour l'alphabet
-            InitialiserLeDictionnaire(nomFichier);
-            
-            // On trie tout de suite pour que la recherche dichotomique fonctionne
-            TriParQuickSort();
+            this.mots = new List<string>[26]; // Comme dit plus haut on veut un tableau de 26 listes pour chaque lettre de l'alphabet
+            InitialiserLeDictionnaire(nomdufichier); // On utilise la fonction que l'on a créer plus bas pour charger chaque mot du fichier dans notre tableau de liste
+            TriParQuickSort(); // On tri les mots de chaque liste de notre tableau pour que ca soit déjà fait pour les futures fonctions.
         }
 
-        // Lecture et chargement du fichier
+
         public void InitialiserLeDictionnaire(string chemindufichier)
         {
-            try // La fonction try/catch va nous permettre d'executer le code si celui ci n'a pas d'erreur au moment de la recherche ou de la lecture du fichier. Si il y a une erreur alors cela affichera l'erreur directement.
+            try /** On peut souvent avoir des erreurs lorsque l'on cherche à lire un fichier donc on
+            utilise un try/catch comme ca s'il y a une erreur de lecture, on affiche le problème 
+            et le programme continue.**/
             {
                 using (StreamReader lecteur_fichier = new StreamReader(chemindufichier))
+                /** Le Streamreader va permettre d'ouvrir le fichier dont le chemin d'accès est donné en
+                paramètre pour ensuite extirper du fichier les mots pour les mettre dans les listes
+                **/
                 {
-                    string? ligne; // le point d'interogation permet d'accepter de mettre une valeur nulle pour pas que le prgroamme me mette un erreur "nullabl" au moment de compiler
-                    int compteurLigne = 0;
-                    
-                    // On lit ligne par ligne
+                    string? ligne; 
+                    int compteurLigne = 0; 
+                    /**le compteur va nous permettre de changer de liste à chaque incrémentation
+                    si compteurligne = 0 alors on est sur la liste de mots commencant en A puis B etc..**/
                     while ((ligne = lecteur_fichier.ReadLine()) != null && compteurLigne < 26)
                     {
-                        // On découpe la ligne et on vire les entrées vides s'il y en a
-                        string[] motsséparés = ligne.Split(separateurs, StringSplitOptions.RemoveEmptyEntries); // cette ligne a été faite à partir de l'ia pour enlever tous les espaces que l'on peut trouver dans le fichier
-                        
-                        // Optimisation : on donne la taille direct pour éviter que la liste s'agrandisse toute seule
-                        mots[compteurLigne] = new List<string>(motsséparés.Length);
-                        
-                        foreach(var m in motsséparés)
+
+                        mots[compteurLigne] = new List<string>();
+                        string motEnCours = "";
+
+                        // Parcourt chaque caractère de la ligne
+                        foreach (char c in ligne)
                         {
-                            // On stocke tout en majuscules pour simplifier les comparaisons plus tard
-                            mots[compteurLigne].Add(m.ToUpper());
+                            if (c != ' ') // Si le caractère n'est pas un espace
+                            {
+                                motEnCours += c; // Ajoute le caractère au mot en cours
+                            }
+                            else // Si c'est un espace
+                            {
+                                if (!string.IsNullOrEmpty(motEnCours)) // Si le mot n'est pas vide
+                                {
+                                    mots[compteurLigne].Add(motEnCours.ToUpper()); // Ajoute le mot à la liste
+                                    motEnCours = ""; // Réinitialise pour le prochain mot
+                                }
+                            }
                         }
+                        // Ajoute le dernier mot (s'il y en a un) après la fin de la ligne
+                        if (!string.IsNullOrEmpty(motEnCours))
+                        {
+                            mots[compteurLigne].Add(motEnCours.ToUpper());
+                        }
+
                         compteurLigne++;
                     }
                 }
@@ -72,12 +90,12 @@ namespace PROJETFINAL_ALGO_POO
 
         // Recherche récursive
         public bool RechDichoRecursif(string mot)
-        {    
+        {
             if (string.IsNullOrEmpty(mot)) return false;
-            
+
             string motMaj = mot.ToUpper(); // On s'assure que c'est bien en majuscule
             int index = motMaj[0] - 'A';
-            
+
             // Vérif si c'est bien une lettre valide
             if (index < 0 || index > 25) return false;
 
@@ -94,14 +112,14 @@ namespace PROJETFINAL_ALGO_POO
             if (debut > fin) return false; // Zone de recherche vide
 
             int milieu = (debut + fin) / 2;
-            
+
             int comparaison = string.Compare(motCherche, liste[milieu]);
 
             if (comparaison == 0) return true;
-            
+
             // Si le mot est avant dans l'alphabet, on cherche à gauche
             if (comparaison < 0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);
-            
+
             // Sinon on cherche à droite
             else return RechDichoInterne(liste, motCherche, milieu + 1, fin);
         }

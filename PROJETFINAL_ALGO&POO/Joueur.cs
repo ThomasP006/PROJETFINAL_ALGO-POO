@@ -20,9 +20,9 @@ namespace PROJETFINAL_ALGO_POO
         //La création d’un joueur n’est possible que si celui-ci a un nom au départ du jeu
         public Joueur(string nom)
         {
-            if(nom==null|| nom==""||nom==" ")
+            if(nom==null|| nom==""||nom==" ") // on met les cas d'erreurs ou le nom entré par le joueur est invalide
         {
-            Console.WriteLine("Il y a une erreur, le nom du joueur est vide."); 
+            Console.WriteLine("Il y a une erreur, le nom du joueur est vide. On l'initialise donc par défaut"); 
             nom = "Joueur_par_défaut"; 
         }
             this.nom = nom;  // on initalise le nom du joueur avec le nom donné en paramètre
@@ -43,11 +43,11 @@ namespace PROJETFINAL_ALGO_POO
         {
             get { return scores_plateau; }
         }
-        public void Add_Mot (string mot)
+        public void Add_Mot (string mot) // Cette classe nout a été demandée dans l'énoncé
         {
             if (this.mots_trouvés==null) this.mots_trouvés=new List<string>(); // la liste est initialisée à null mais on ne peut pas ajouter de mot dans ce cas. 
             //On crée donc une nouvelle liste auquel on peut attribuer des valeurs
-            this.mots_trouvés.Add(mot); // j'utilise la propriété .Add des listes pur ajouter le mot entré en paramètre
+            this.mots_trouvés.Add(mot); // j'utilise la propriété .Add des listes pour ajouter le mot entré en paramètre
         }
         public string toString()
         {
