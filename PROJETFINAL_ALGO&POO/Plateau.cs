@@ -6,249 +6,294 @@ namespace PROJETFINAL_ALGO_POO
 {
     public class Plateau
     {
-        private char[,] grilleDeLettres;
-        private int nombreLignes;
-        private int nombreColonnes;
-        private static Random generateurAleatoire = new Random();
+        // Matrice de caractères représentant le plateau de jeu
+        private char[,] grille_de_lettres;
+        // Nombre de lignes et de colonnes du plateau
+        private int nombre_de_lignes;
+        private int nombre_de_colonnes;
+        // Générateur de nombres aléatoires pour la création du plateau
+        private static Random generateur_aleatoire = new Random();
 
         // Constructeur pour charger un plateau depuis un fichier CSV
-        public Plateau(string cheminFichierCSV)
+        public Plateau(string chemin_du_fichier_csv)
         {
-            ChargerDepuisFichier(cheminFichierCSV);
+            ChargerPlateauDepuisFichier(chemin_du_fichier_csv);
         }
 
         // Constructeur pour générer un plateau aléatoire
-        public Plateau(string cheminFichierLettres, int lignes, int colonnes)
+        public Plateau(string chemin_du_fichier_lettres, int lignes, int colonnes)
         {
-            nombreLignes = lignes;
-            nombreColonnes = colonnes;
-            grilleDeLettres = new char[lignes, colonnes];
-            GenererPlateauAleatoire(cheminFichierLettres);
+            this.nombre_de_lignes = lignes;
+            this.nombre_de_colonnes = colonnes;
+            this.grille_de_lettres = new char[lignes, colonnes];
+            GenererPlateauAleatoire(chemin_du_fichier_lettres);
         }
 
-        private void GenererPlateauAleatoire(string cheminFichierLettres)
+        // Génère un plateau aléatoire à partir du fichier des lettres
+        private void GenererPlateauAleatoire(string chemin_du_fichier_lettres)
         {
-            // 1. Lire les lettres et leurs fréquences maximales
-            var lignesFichier = File.ReadAllLines(cheminFichierLettres);
-            Dictionary<char, int> frequencesMaxLettres = new Dictionary<char, int>();
+            // 1. Lire le fichier des lettres et leurs fréquences
+            var lignes_du_fichier = File.ReadAllLines(chemin_du_fichier_lettres);
+            Dictionary<char, int> frequences_max_par_lettre = new Dictionary<char, int>();
 
-            foreach (var ligne in lignesFichier)
+            foreach (var ligne in lignes_du_fichier)
             {
                 var elements = ligne.Split(',');
                 char lettre = char.ToUpper(elements[0][0]);
-                int frequenceMax = int.Parse(elements[1]);
-                frequencesMaxLettres[lettre] = frequenceMax;
+                int frequence_max = int.Parse(elements[1]);
+                frequences_max_par_lettre[lettre] = frequence_max;
             }
 
-            // 2. Vérifier qu'il y a assez de lettres
-            int totalLettresDisponibles = 0;
-            foreach (var frequence in frequencesMaxLettres.Values)
-                totalLettresDisponibles += frequence;
+            // 2. Vérifier qu'il y a assez de lettres pour remplir le plateau
+            int total_lettres_disponibles = 0;
+            foreach (var frequence in frequences_max_par_lettre.Values)
+                total_lettres_disponibles += frequence;
 
-            if (totalLettresDisponibles < nombreLignes * nombreColonnes)
+            if (total_lettres_disponibles < nombre_de_lignes * nombre_de_colonnes)
                 throw new Exception("Pas assez de lettres pour remplir le plateau.");
 
             // 3. Créer une liste de lettres en respectant les fréquences
-            List<char> reservoirLettres = new List<char>();
-            foreach (var lettreFrequence in frequencesMaxLettres)
+            List<char> reservoir_de_lettres = new List<char>();
+            foreach (var lettre_frequence in frequences_max_par_lettre)
             {
-                char lettre = lettreFrequence.Key;
-                int frequence = lettreFrequence.Value;
+                char lettre = lettre_frequence.Key;
+                int frequence = lettre_frequence.Value;
                 for (int i = 0; i < frequence; i++)
-                    reservoirLettres.Add(lettre);
+                    reservoir_de_lettres.Add(lettre);
             }
 
-            // 4. Mélanger les lettres
-            for (int i = reservoirLettres.Count - 1; i > 0; i--)
+            // 4. Mélanger les lettres aléatoirement
+            for (int i = reservoir_de_lettres.Count - 1; i > 0; i--)
             {
-                int j = generateurAleatoire.Next(i + 1);
-                (reservoirLettres[i], reservoirLettres[j]) = (reservoirLettres[j], reservoirLettres[i]);
+                int j = generateur_aleatoire.Next(i + 1);
+                (reservoir_de_lettres[i], reservoir_de_lettres[j]) = (reservoir_de_lettres[j], reservoir_de_lettres[i]);
             }
 
-            // 5. Remplir la grille
+            // 5. Remplir la grille avec les lettres mélangées
             int index = 0;
-            for (int i = 0; i < nombreLignes; i++)
+            for (int i = 0; i < nombre_de_lignes; i++)
             {
-                for (int j = 0; j < nombreColonnes; j++)
+                for (int j = 0; j < nombre_de_colonnes; j++)
                 {
-                    grilleDeLettres[i, j] = reservoirLettres[index];
+                    grille_de_lettres[i, j] = reservoir_de_lettres[index];
                     index++;
                 }
             }
         }
 
-        public override string ToString()
+        // Charge un plateau depuis un fichier CSV
+        public void ChargerPlateauDepuisFichier(string chemin_du_fichier)
+{
+    var lignes_du_fichier = File.ReadAllLines(chemin_du_fichier);
+
+    // Détermine le nombre de lignes et de colonnes
+    this.nombre_de_lignes = lignes_du_fichier.Length;
+    this.nombre_de_colonnes = lignes_du_fichier[0].Split(',').Length;
+
+    // Initialise la grille
+    this.grille_de_lettres = new char[nombre_de_lignes, nombre_de_colonnes];
+
+    // Remplit la grille avec les données du fichier
+    for (int i = 0; i < nombre_de_lignes; i++)
+    {
+        var cases = lignes_du_fichier[i].Split(',');
+
+        for (int j = 0; j < nombre_de_colonnes; j++)
         {
-            string representationPlateau = "";
-
-            // Ligne supérieure
-            representationPlateau += "┌";
-            for (int j = 0; j < nombreColonnes; j++)
+            if (j < cases.Length)
             {
-                representationPlateau += "───";
-                if (j < nombreColonnes - 1)
-                    representationPlateau += "┬";
+                if (string.IsNullOrEmpty(cases[j]))
+                    grille_de_lettres[i, j] = ' '; // Case vide
+                else
+                    grille_de_lettres[i, j] = cases[j][0]; // Premier caractère
             }
-            representationPlateau += "┐\n";
-
-            // Lignes du plateau
-            for (int i = 0; i < nombreLignes; i++)
+            else
             {
-                representationPlateau += "│";
-                for (int j = 0; j < nombreColonnes; j++)
-                {
-                    char lettre = grilleDeLettres[i, j];
-                    representationPlateau += $" {lettre} │";
-                }
-                representationPlateau += "\n";
-
-                if (i < nombreLignes - 1)
-                {
-                    representationPlateau += "├";
-                    for (int j = 0; j < nombreColonnes; j++)
-                    {
-                        representationPlateau += "───";
-                        if (j < nombreColonnes - 1)
-                            representationPlateau += "┼";
-                    }
-                    representationPlateau += "┤\n";
-                }
+                grille_de_lettres[i, j] = ' '; // Si la ligne n'a pas assez de colonnes, on met un espace
             }
-
-            // Ligne inférieure
-            representationPlateau += "└";
-            for (int j = 0; j < nombreColonnes; j++)
-            {
-                representationPlateau += "───";
-                if (j < nombreColonnes - 1)
-                    representationPlateau += "┴";
-            }
-            representationPlateau += "┘\n";
-
-            return representationPlateau;
         }
+    }
+}
 
-        public List<Position> Recherche_Mot(string mot)
+        // Affiche le plateau sous forme de chaîne de caractères
+       public override string ToString()
+{
+    string representation_plateau = "";
+
+    // Ligne supérieure du plateau
+    representation_plateau += "┌";
+    for (int j = 0; j < nombre_de_colonnes; j++)
+    {
+        representation_plateau += "───";
+        if (j < nombre_de_colonnes - 1)
+            representation_plateau += "┬";
+    }
+    representation_plateau += "┐\n";
+
+    // Lignes du plateau
+    for (int i = 0; i < nombre_de_lignes; i++)
+    {
+        representation_plateau += "│";
+        for (int j = 0; j < nombre_de_colonnes; j++)
+        {
+            char lettre = grille_de_lettres[i, j];
+            representation_plateau += $" {((lettre == ' ') ? ' ' : lettre)} │"; // Affiche un espace si la case est vide
+        }
+        representation_plateau += "\n";
+
+        if (i < nombre_de_lignes - 1)
+        {
+            representation_plateau += "├";
+            for (int j = 0; j < nombre_de_colonnes; j++)
+            {
+                representation_plateau += "───";
+                if (j < nombre_de_colonnes - 1)
+                    representation_plateau += "┼";
+            }
+            representation_plateau += "┤\n";
+        }
+    }
+
+    // Ligne inférieure du plateau
+    representation_plateau += "└";
+    for (int j = 0; j < nombre_de_colonnes; j++)
+    {
+        representation_plateau += "───";
+        if (j < nombre_de_colonnes - 1)
+            representation_plateau += "┴";
+    }
+    representation_plateau += "┘\n";
+
+    return representation_plateau;
+}
+
+
+
+        // Recherche un mot sur le plateau
+        public List<Position> RechercherMot(string mot)
         {
             mot = mot.ToUpper();
-            int ligneDepart = nombreLignes - 1;
+            int ligne_de_depart = nombre_de_lignes - 1; // On commence la recherche depuis la base du plateau
 
-            for (int colonne = 0; colonne < nombreColonnes; colonne++)
+            for (int colonne = 0; colonne < nombre_de_colonnes; colonne++)
             {
-                bool[,] casesUtilisees = new bool[nombreLignes, nombreColonnes];
-                List<Position> cheminMot = new List<Position>();
+                bool[,] cases_utilisees = new bool[nombre_de_lignes, nombre_de_colonnes];
+                List<Position> chemin_mot = new List<Position>();
 
-                if (RechercherVoisins(ligneDepart, colonne, mot, 0, casesUtilisees, cheminMot))
-                    return cheminMot;
+                if (RechercherVoisins(ligne_de_depart, colonne, mot, 0, cases_utilisees, chemin_mot))
+                    return chemin_mot;
             }
 
-            return null;
+            return null; // Mot introuvable
         }
 
-        private bool RechercherVoisins(int i, int j, string mot, int indexLettre, bool[,] casesUtilisees, List<Position> cheminMot)
+        // Méthode récursive pour rechercher les voisins et former le mot
+        private bool RechercherVoisins(int i, int j, string mot, int indice_lettre, bool[,] cases_utilisees, List<Position> chemin_mot)
         {
-            if (i < 0 || i >= nombreLignes || j < 0 || j >= nombreColonnes)
+            // Vérifie si on est hors du plateau
+            if (i < 0 || i >= nombre_de_lignes || j < 0 || j >= nombre_de_colonnes)
                 return false;
 
-            if (casesUtilisees[i, j])
+            // Vérifie si la case est déjà utilisée
+            if (cases_utilisees[i, j])
                 return false;
 
-            if (grilleDeLettres[i, j] != mot[indexLettre])
+            // Vérifie si la lettre correspond à celle attendue
+            if (grille_de_lettres[i, j] != mot[indice_lettre])
                 return false;
 
-            casesUtilisees[i, j] = true;
-            cheminMot.Add(new Position(i, j));
+            // Marque la case comme utilisée et ajoute la position au chemin
+            cases_utilisees[i, j] = true;
+            chemin_mot.Add(new Position(i, j));
 
-            if (indexLettre == mot.Length - 1)
+            // Si on a trouvé toutes les lettres du mot, retourne vrai
+            if (indice_lettre == mot.Length - 1)
                 return true;
 
-            if (RechercherVoisins(i - 1, j, mot, indexLettre + 1, casesUtilisees, cheminMot) ||
-                RechercherVoisins(i + 1, j, mot, indexLettre + 1, casesUtilisees, cheminMot) ||
-                RechercherVoisins(i, j - 1, mot, indexLettre + 1, casesUtilisees, cheminMot) ||
-                RechercherVoisins(i, j + 1, mot, indexLettre + 1, casesUtilisees, cheminMot))
+            // Recherche récursive dans les 4 directions
+            if (RechercherVoisins(i - 1, j, mot, indice_lettre + 1, cases_utilisees, chemin_mot) || // Haut
+                RechercherVoisins(i + 1, j, mot, indice_lettre + 1, cases_utilisees, chemin_mot) || // Bas
+                RechercherVoisins(i, j - 1, mot, indice_lettre + 1, cases_utilisees, chemin_mot) || // Gauche
+                RechercherVoisins(i, j + 1, mot, indice_lettre + 1, cases_utilisees, chemin_mot))   // Droite
                 return true;
 
-            casesUtilisees[i, j] = false;
-            cheminMot.RemoveAt(cheminMot.Count - 1);
+            // Si le mot n'est pas trouvé, annule le marquage de la case et retire la position du chemin
+            cases_utilisees[i, j] = false;
+            chemin_mot.RemoveAt(chemin_mot.Count - 1);
             return false;
         }
 
+        // Vérifie si le plateau est vide
         public bool EstVide()
         {
-            for (int i = 0; i < nombreLignes; i++)
+            for (int i = 0; i < nombre_de_lignes; i++)
             {
-                for (int j = 0; j < nombreColonnes; j++)
+                for (int j = 0; j < nombre_de_colonnes; j++)
                 {
-                    if (grilleDeLettres[i, j] != '\0')
+                    if (grille_de_lettres[i, j] != '\0')
                         return false;
                 }
             }
             return true;
         }
 
-        public void MettreAJourPlateau(List<Position> positionsMot)
+        // Met à jour le plateau après qu'un mot a été trouvé
+        public void MettreAJourPlateau(List<Position> positions_mot)
+{
+    // 1. Efface les lettres du mot trouvé en les remplaçant par un espace vide
+    foreach (var position in positions_mot)
+    {
+        grille_de_lettres[position.Ligne, position.Colonne] = ' ';
+    }
+
+    // 2. Fait glisser les lettres vers le bas pour chaque colonne
+    for (int j = 0; j < nombre_de_colonnes; j++)
+    {
+        List<char> lettres_colonne = new List<char>();
+
+        // Collecte toutes les lettres non vides de la colonne
+        for (int i = nombre_de_lignes - 1; i >= 0; i--)
         {
-            foreach (var position in positionsMot)
-                grilleDeLettres[position.I, position.J] = '\0';
-
-            for (int j = 0; j < nombreColonnes; j++)
+            if (grille_de_lettres[i, j] != ' ')
             {
-                List<char> lettresColonne = new List<char>();
-                for (int i = nombreLignes - 1; i >= 0; i--)
-                {
-                    if (grilleDeLettres[i, j] != '\0')
-                        lettresColonne.Add(grilleDeLettres[i, j]);
-                }
-
-                int index = 0;
-                for (int i = nombreLignes - 1; i >= 0; i--)
-                {
-                    if (index < lettresColonne.Count)
-                    {
-                        grilleDeLettres[i, j] = lettresColonne[index];
-                        index++;
-                    }
-                    else
-                        grilleDeLettres[i, j] = '\0';
-                }
+                lettres_colonne.Add(grille_de_lettres[i, j]);
             }
         }
 
-        public void SauvegarderDansFichier(string cheminFichier)
+        // Remplit la colonne de bas en haut avec les lettres collectées
+        int index = 0;
+        for (int i = nombre_de_lignes - 1; i >= 0; i--)
         {
-            using (StreamWriter ecrivain = new StreamWriter(cheminFichier))
+            if (index < lettres_colonne.Count)
             {
-                for (int i = 0; i < nombreLignes; i++)
+                grille_de_lettres[i, j] = lettres_colonne[index];
+                index++;
+            }
+            else
+            {
+                grille_de_lettres[i, j] = ' '; // Remplit les cases restantes par un espace
+            }
+        }
+    }
+}
+
+
+        // Sauvegarde le plateau dans un fichier
+        public void SauvegarderDansFichier(string chemin_du_fichier)
+        {
+            using (StreamWriter ecrivain = new StreamWriter(chemin_du_fichier))
+            {
+                for (int i = 0; i < nombre_de_lignes; i++)
                 {
                     List<string> cellules = new List<string>();
-                    for (int j = 0; j < nombreColonnes; j++)
+                    for (int j = 0; j < nombre_de_colonnes; j++)
                     {
-                        if (grilleDeLettres[i, j] == '\0')
+                        if (grille_de_lettres[i, j] == '\0')
                             cellules.Add("");
                         else
-                            cellules.Add(grilleDeLettres[i, j].ToString());
+                            cellules.Add(grille_de_lettres[i, j].ToString());
                     }
                     ecrivain.WriteLine(string.Join(",", cellules));
-                }
-            }
-        }
-
-        public void ChargerDepuisFichier(string cheminFichier)
-        {
-            var lignesFichier = File.ReadAllLines(cheminFichier);
-            nombreLignes = lignesFichier.Length;
-            nombreColonnes = lignesFichier[0].Split(',').Length;
-            grilleDeLettres = new char[nombreLignes, nombreColonnes];
-
-            for (int i = 0; i < nombreLignes; i++)
-            {
-                var cellules = lignesFichier[i].Split(',');
-                for (int j = 0; j < nombreColonnes; j++)
-                {
-                    if (string.IsNullOrEmpty(cellules[j]))
-                        grilleDeLettres[i, j] = '\0';
-                    else
-                        grilleDeLettres[i, j] = cellules[j][0];
                 }
             }
         }
@@ -256,13 +301,13 @@ namespace PROJETFINAL_ALGO_POO
 
     public class Position
     {
-        public int I { get; }
-        public int J { get; }
+        public int Ligne { get; }
+        public int Colonne { get; }
 
-        public Position(int i, int j)
+        public Position(int ligne, int colonne)
         {
-            I = i;
-            J = j;
+            Ligne = ligne;
+            Colonne = colonne;
         }
     }
 }

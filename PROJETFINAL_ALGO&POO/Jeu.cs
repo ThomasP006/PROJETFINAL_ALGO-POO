@@ -1,143 +1,153 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace PROJETFINAL_ALGO_POO
 {
     public class Jeu
     {
-        private Joueur joueurUn;
-        private Joueur joueurDeux;
-        private Plateau plateauDeJeu;
-        private Dictionnaire dictionnaireDeMots;
-        private DateTime heureDebutPartie;
-        private TimeSpan dureeTotalePartie = TimeSpan.FromMinutes(2); // Durée totale de la partie
-        private TimeSpan dureeParTour = TimeSpan.FromSeconds(20); // Durée par tour
-        private Dictionary<char, int> poidsDesLettres;
+        // Attributs de la classe Jeu
+        private Joueur joueur_un;
+        private Joueur joueur_deux;
+        private Plateau plateau_de_jeu;
+        private Dictionnaire dictionnaire_de_mots;
+        private DateTime heure_de_debut_partie;
+        private TimeSpan duree_totale_partie = TimeSpan.FromMinutes(2); // Durée totale de la partie
+        private TimeSpan duree_par_tour = TimeSpan.FromSeconds(20); // Durée par tour
+        private Dictionary<char, int> poids_des_lettres;
 
+        // Constructeur : initialise le jeu avec deux joueurs, un plateau et un dictionnaire
         public Jeu(Joueur joueur1, Joueur joueur2, Plateau plateau, Dictionnaire dictionnaire)
         {
-            joueurUn = joueur1;
-            joueurDeux = joueur2;
-            plateauDeJeu = plateau;
-            dictionnaireDeMots = dictionnaire;
+            joueur_un = joueur1;
+            joueur_deux = joueur2;
+            plateau_de_jeu = plateau;
+            dictionnaire_de_mots = dictionnaire;
             ChargerPoidsDesLettres("Lettres.txt");
         }
 
+        // Charge les poids des lettres depuis le fichier
+        private void ChargerPoidsDesLettres(string chemin_du_fichier)
+        {
+            poids_des_lettres = new Dictionary<char, int>();
+            string[] lignes_du_fichier = File.ReadAllLines(chemin_du_fichier);
+            foreach (string ligne in lignes_du_fichier)
+            {
+                string[] elements_ligne = ligne.Split(',');
+                char lettre = elements_ligne[0][0];
+                int poids = int.Parse(elements_ligne[2]);
+                poids_des_lettres[lettre] = poids;
+            }
+        }
+
+        // Démarre la partie
         public void DemarrerPartie()
         {
             Console.WriteLine("Début de la partie !");
-            heureDebutPartie = DateTime.Now;
-            Joueur joueurActif = joueurUn;
+            heure_de_debut_partie = DateTime.Now;
+            Joueur joueur_actif = joueur_un;
 
-            while (DateTime.Now - heureDebutPartie < dureeTotalePartie && !plateauDeJeu.EstVide())
+            // Boucle principale du jeu
+            while (DateTime.Now - heure_de_debut_partie < duree_totale_partie && !plateau_de_jeu.EstVide())
             {
-                bool tourValide = JouerUnTour(joueurActif);
-                if (!tourValide)
+                bool tour_valide = JouerUnTour(joueur_actif);
+                if (!tour_valide)
                     break;
 
-                joueurActif = (joueurActif == joueurUn) ? joueurDeux : joueurUn;
+                // Change de joueur
+                joueur_actif = (joueur_actif == joueur_un) ? joueur_deux : joueur_un;
             }
 
             Console.WriteLine("Fin de la partie !");
             AfficherScoresFinaux();
         }
 
-        private bool JouerUnTour(Joueur joueurActif)
+        // Gère un tour de jeu pour un joueur
+        private bool JouerUnTour(Joueur joueur_actif)
         {
             while (true)
             {
-                TimeSpan tempsRestantPartie = dureeTotalePartie - (DateTime.Now - heureDebutPartie);
-                if (tempsRestantPartie <= TimeSpan.Zero)
+                TimeSpan temps_restant_partie = duree_totale_partie - (DateTime.Now - heure_de_debut_partie);
+                if (temps_restant_partie <= TimeSpan.Zero)
                     return false;
 
                 Console.Clear();
-                Console.WriteLine(plateauDeJeu.ToString());
-                Console.WriteLine($"Tour de {joueurActif.Nom}");
-                Console.WriteLine($"Temps restant : {(int)tempsRestantPartie.TotalSeconds} secondes");
+                Console.WriteLine(plateau_de_jeu.ToString());
+                Console.WriteLine($"Tour de {joueur_actif.Nom}");
+                Console.WriteLine($"Temps restant : {(int)temps_restant_partie.TotalSeconds} secondes");
 
-                if (tempsRestantPartie.TotalSeconds <= 10)
+                if (temps_restant_partie.TotalSeconds <= 10)
                     Console.WriteLine("⚠️ Il reste moins de 10 secondes !");
 
                 Console.Write("Proposez un mot : ");
-                string motPropose = Console.ReadLine().ToUpper();
+                string mot_propose = Console.ReadLine().ToUpper();
 
-                if (motPropose.Length < 2)
+                // Vérifie si le mot est valide
+                if (mot_propose.Length < 2)
                 {
                     Console.WriteLine("Le mot est trop court !");
                     Console.ReadKey();
                     continue;
                 }
 
-                if (joueurActif.Contient(motPropose))
+                if (joueur_actif.Contient(mot_propose))
                 {
                     Console.WriteLine("Ce mot a déjà été trouvé !");
                     Console.ReadKey();
                     continue;
                 }
 
-                if (!dictionnaireDeMots.RechDichoRecursif(motPropose))
+                if (!dictionnaire_de_mots.RechDichoRecursif(mot_propose))
                 {
                     Console.WriteLine("Ce mot n'est pas dans le dictionnaire !");
                     Console.ReadKey();
                     continue;
                 }
 
-                var positionsMot = plateauDeJeu.Recherche_Mot(motPropose);
-                if (positionsMot == null)
+                var positions_mot = plateau_de_jeu.RechercherMot(mot_propose);
+                if (positions_mot == null)
                 {
                     Console.WriteLine("Ce mot n'est pas présent sur le plateau !");
                     Console.ReadKey();
                     continue;
                 }
 
-                plateauDeJeu.MettreAJourPlateau(positionsMot);
-                int scoreMot = CalculerScoreMot(motPropose);
-                joueurActif.Add_Mot(motPropose);
-                joueurActif.Add_Score(scoreMot);
+                // Met à jour le plateau et le score
+                plateau_de_jeu.MettreAJourPlateau(positions_mot);
+                int score_mot = CalculerScoreMot(mot_propose);
+                joueur_actif.Add_Mot(mot_propose);
+                joueur_actif.Add_Score(score_mot);
 
-                Console.WriteLine($"Mot validé ! Score : +{scoreMot}");
+                Console.WriteLine($"Mot validé ! Score : +{score_mot}");
                 Console.ReadKey();
                 return true;
             }
         }
 
-        private void ChargerPoidsDesLettres(string cheminFichier)
-        {
-            poidsDesLettres = new Dictionary<char, int>();
-            string[] lignesFichier = File.ReadAllLines(cheminFichier);
-            foreach (string ligne in lignesFichier)
-            {
-                string[] elementsLigne = ligne.Split(',');
-                char lettre = elementsLigne[0][0];
-                int poids = int.Parse(elementsLigne[2]);
-                poidsDesLettres[lettre] = poids;
-            }
-        }
-
+        // Calcule le score d'un mot
         private int CalculerScoreMot(string mot)
         {
-            int scoreTotal = 0;
+            int score_total = 0;
             foreach (char lettre in mot)
             {
-                if (poidsDesLettres.ContainsKey(lettre))
-                    scoreTotal += poidsDesLettres[lettre];
+                if (poids_des_lettres.ContainsKey(lettre))
+                    score_total += poids_des_lettres[lettre];
             }
-            return scoreTotal * mot.Length;
+            return score_total * mot.Length;
         }
 
+        // Affiche les scores finaux
         private void AfficherScoresFinaux()
         {
             Console.Clear();
             Console.WriteLine("=== Résultats finaux ===\n");
-            Console.WriteLine($"{joueurUn.Nom} : {joueurUn.Scores_plateau} points");
-            Console.WriteLine($"{joueurDeux.Nom} : {joueurDeux.Scores_plateau} points\n");
+            Console.WriteLine($"{joueur_un.Nom} : {joueur_un.Scores_plateau} points");
+            Console.WriteLine($"{joueur_deux.Nom} : {joueur_deux.Scores_plateau} points\n");
 
-            if (joueurUn.Scores_plateau > joueurDeux.Scores_plateau)
-                Console.WriteLine($"🏆 Le gagnant est {joueurUn.Nom} !");
-            else if (joueurDeux.Scores_plateau > joueurUn.Scores_plateau)
-                Console.WriteLine($"🏆 Le gagnant est {joueurDeux.Nom} !");
+            if (joueur_un.Scores_plateau > joueur_deux.Scores_plateau)
+                Console.WriteLine($"🏆 Le gagnant est {joueur_un.Nom} !");
+            else if (joueur_deux.Scores_plateau > joueur_un.Scores_plateau)
+                Console.WriteLine($"🏆 Le gagnant est {joueur_deux.Nom} !");
             else
                 Console.WriteLine("🤝 Match nul !");
 

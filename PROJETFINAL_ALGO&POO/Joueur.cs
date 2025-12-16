@@ -22,8 +22,8 @@ namespace PROJETFINAL_ALGO_POO
         {
             if(nom==null|| nom==""||nom==" ")
         {
-            Console.WriteLine("Erreur : le nom du joueur est vide."); 
-            nom = "Player"; 
+            Console.WriteLine("Il y a une erreur, le nom du joueur est vide."); 
+            nom = "Joueur_par_défaut"; 
         }
             this.nom = nom;  // on initalise le nom du joueur avec le nom donné en paramètre
             this.mots_trouvés = null; // la liste doit être intialisée à null
@@ -52,8 +52,8 @@ namespace PROJETFINAL_ALGO_POO
         public string toString()
         {
             string phrase = "Le joueur s'appelle : " + this.nom + "\n";
-            phrase += "Score actuel : " + this.scores_plateau + "\n";
-            phrase += "Mots trouvés : \n";
+            phrase += "Son score actuel est de : " + this.scores_plateau + " points\n";
+            phrase += "Il a trouvé les mots suivants : \n";
             if (this.mots_trouvés != null && this.mots_trouvés.Count > 0)
             {
                 for (int i = 0; i < this.mots_trouvés.Count; i++)
@@ -63,7 +63,7 @@ namespace PROJETFINAL_ALGO_POO
             }
             else
             {
-                phrase += "Aucun mot trouvé pour l'instant.\n";
+                phrase += $"{this.nom} n'a pas encore trouvé de mots.\n";
             }
             return phrase;
         }

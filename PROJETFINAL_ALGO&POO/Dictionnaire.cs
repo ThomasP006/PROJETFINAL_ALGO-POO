@@ -16,32 +16,32 @@ namespace PROJETFINAL_ALGO_POO
         public Dictionnaire(string nomFichier)
         {
             this.mots = new List<string>[26]; // 26 cases pour l'alphabet
-            InitDictionnaire(nomFichier);
+            InitialiserLeDictionnaire(nomFichier);
             
             // On trie tout de suite pour que la recherche dichotomique fonctionne
-            Tri_QuickSort();
+            TriParQuickSort();
         }
 
         // Lecture et chargement du fichier
-        public void InitDictionnaire(string cheminFichier)
+        public void InitialiserLeDictionnaire(string chemindufichier)
         {
-            try
+            try // La fonction try/catch va nous permettre d'executer le code si celui ci n'a pas d'erreur au moment de la recherche ou de la lecture du fichier. Si il y a une erreur alors cela affichera l'erreur directement.
             {
-                using (StreamReader sr = new StreamReader(cheminFichier))
+                using (StreamReader lecteur_fichier = new StreamReader(chemindufichier))
                 {
-                    string? ligne;
+                    string? ligne; // le point d'interogation permet d'accepter de mettre une valeur nulle pour pas que le prgroamme me mette un erreur "nullabl" au moment de compiler
                     int compteurLigne = 0;
                     
                     // On lit ligne par ligne
-                    while ((ligne = sr.ReadLine()) != null && compteurLigne < 26)
+                    while ((ligne = lecteur_fichier.ReadLine()) != null && compteurLigne < 26)
                     {
                         // On découpe la ligne et on vire les entrées vides s'il y en a
-                        string[] motsDecoupes = ligne.Split(separateurs, StringSplitOptions.RemoveEmptyEntries);
+                        string[] motsséparés = ligne.Split(separateurs, StringSplitOptions.RemoveEmptyEntries); // cette ligne a été faite à partir de l'ia pour enlever tous les espaces que l'on peut trouver dans le fichier
                         
                         // Optimisation : on donne la taille direct pour éviter que la liste s'agrandisse toute seule
-                        mots[compteurLigne] = new List<string>(motsDecoupes.Length);
+                        mots[compteurLigne] = new List<string>(motsséparés.Length);
                         
-                        foreach(var m in motsDecoupes)
+                        foreach(var m in motsséparés)
                         {
                             // On stocke tout en majuscules pour simplifier les comparaisons plus tard
                             mots[compteurLigne].Add(m.ToUpper());
@@ -107,7 +107,7 @@ namespace PROJETFINAL_ALGO_POO
         }
 
         // Lance le tri sur toutes les lettres
-        public void Tri_QuickSort()
+        public void TriParQuickSort()
         {
             for (int i = 0; i < mots.Length; i++)
             {
