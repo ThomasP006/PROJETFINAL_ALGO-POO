@@ -33,38 +33,48 @@ namespace PROJETFINAL_ALGO_POO
                 **/
                 {
                     string? ligne; 
+                    /** On initialise une variable string qui peut prendre la valeur null
+                    d'où le "?" Cette variable va stocker les lignes de notre fichier
+                    **/
                     int compteurLigne = 0; 
                     /**le compteur va nous permettre de changer de liste à chaque incrémentation
                     si compteurligne = 0 alors on est sur la liste de mots commencant en A puis B etc..**/
                     while ((ligne = lecteur_fichier.ReadLine()) != null && compteurLigne < 26)
+                    /** Cette boucle while va nous permettre de lire toutes les lignes du 
+                    fichier une une par une jusqu'à ce que les lignes du fichiers soit vides ou que on est arrivé à la fin de l'alphabet
+                    ce qui signifique que tous les mots du fichier ont été rentrés dans les listes.
+                    **/
                     {
 
                         mots[compteurLigne] = new List<string>();
-                        string motEnCours = "";
+                        /** On initialise chaque liste du tableau mots à chaque incrémentation de notre compteur**/
+                        string motEnCours = ""; /** Cette variable permet de récuperer chaque lettre 
+                        d'un mot de la ligne et de le construire jusqu'à arriver à un espace**/
 
-                        // Parcourt chaque caractère de la ligne
-                        foreach (char c in ligne)
+                        foreach (char c in ligne) /**Notre boucle va permettre de construire les mots 
+                        ou de les ajouters à notre liste selon si le caractère observé est une lettre 
+                        ,et dans ce cas là il appartient encore à notre mot, ou si c'est un espace**/
                         {
-                            if (c != ' ') // Si le caractère n'est pas un espace
+                            if (c != ' ') // Dans le cas où le caractère n'est pas un espace
                             {
-                                motEnCours += c; // Ajoute le caractère au mot en cours
+                                motEnCours += c; // On ajoute le caractère à notre mot 
                             }
-                            else // Si c'est un espace
+                            else // Dans le cas où le caractère est un espace
                             {
-                                if (!string.IsNullOrEmpty(motEnCours)) // Si le mot n'est pas vide
+                                if (!string.IsNullOrEmpty(motEnCours)) /**Si le mot que l'on a construit n'est pas 
+                                un espace(dans le cas où il y aurait plusieurs espaces entre les mots dans le fichier)**/
                                 {
-                                    mots[compteurLigne].Add(motEnCours.ToUpper()); // Ajoute le mot à la liste
-                                    motEnCours = ""; // Réinitialise pour le prochain mot
+                                    mots[compteurLigne].Add(motEnCours.ToUpper()); // On ajoute le mot à la liste
+                                    motEnCours = ""; // On va reconstruire un mot après notre espace donc on remet la variable à vide.
                                 }
                             }
                         }
-                        // Ajoute le dernier mot (s'il y en a un) après la fin de la ligne
                         if (!string.IsNullOrEmpty(motEnCours))
                         {
-                            mots[compteurLigne].Add(motEnCours.ToUpper());
+                            mots[compteurLigne].Add(motEnCours.ToUpper()); 
                         }
 
-                        compteurLigne++;
+                        compteurLigne++; // on incrémente notre compteur pour passer à la lettre suivante de l'alphabet 
                     }
                 }
             }
@@ -74,15 +84,18 @@ namespace PROJETFINAL_ALGO_POO
             }
         }
 
-        // Affiche le nombre de mots par lettre
         public string toString()
         {
-            string resultat = "Dictionnaire : Français\nNombre de mots par lettre :\n";
-            for (int i = 0; i < mots.Length; i++)
+            char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 
+            'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            };
+            string resultat = "La langue de notre dictionnaire est en francais.\nVoici le nombre de mots par lettre :\n"; // On veut afficher le nombre de lettre par mot des listes et la langue.
+            for (int i = 0; i < mots.Length; i++) // La boucle va permettre de passer par chaque mot du tableau donc du dictionnaire
             {
-                char lettre = (char)('A' + i);
-                // On vérifie que la liste n'est pas vide
-                int nombreMots = (mots[i] != null) ? mots[i].Count : 0;
+                char lettre = alphabet[i]; // on initialise une varibale qui récupère les lettres de l'alphabet
+                int nombreMots; // Cette variable va prendre le nombre de mot contenus par liste donc par lettre de l'alphabet
+                if (mots[i] != null) nombreMots = mots[i].Count; // Si la liste n'est pas vide on compte le nombre d'élements 
+                else nombreMots = 0; //sinon comme la liste est vide cette lettre de l'alphabet ne contient aucun mot dans le dictionnaire
                 resultat += "Lettre " + lettre + " : " + nombreMots + " mots\n";
             }
             return resultat;
