@@ -17,7 +17,13 @@ namespace PROJETFINAL_ALGO_POO
         {
             this.mots = new List<string>[26]; // Comme dit plus haut on veut un tableau de 26 listes pour chaque lettre de l'alphabet
             InitialiserLeDictionnaire(nomdufichier); // On utilise la fonction que l'on a créer plus bas pour charger chaque mot du fichier dans notre tableau de liste
-            TriParQuickSort(); // On tri les mots de chaque liste de notre tableau pour que ca soit déjà fait pour les futures fonctions.
+            for (int i = 0; i < 26; i++)
+            {
+                if (mots[i] != null && mots[i].Count > 1)
+                {
+                    TriParQuickSort(mots[i], 0, mots[i].Count - 1); // On trie chaque liste du tableau avec le tri par quicksort
+                }
+            }
         }
 
 
@@ -96,97 +102,84 @@ namespace PROJETFINAL_ALGO_POO
                 int nombreMots; // Cette variable va prendre le nombre de mot contenus par liste donc par lettre de l'alphabet
                 if (mots[i] != null) nombreMots = mots[i].Count; // Si la liste n'est pas vide on compte le nombre d'élements 
                 else nombreMots = 0; //sinon comme la liste est vide cette lettre de l'alphabet ne contient aucun mot dans le dictionnaire
-                resultat += "Lettre " + lettre + " : " + nombreMots + " mots\n";
+                resultat += "Lettre " + lettre + " : " + nombreMots + " mots\n";/**On ajoute à
+                l'affichage la lettre et le nombre de mots associés**/
             }
-            return resultat;
+            return resultat; // On retourne l'affichage
         }
 
-        // Recherche récursive
-        public bool RechDichoRecursif(string mot)
+        public bool RechDichoRecursif(string mot) //Fonction de recherche dichotomique comme demandé.
+        //On renvoie faux si le mot qu'a entré le joueur n'est pastrouvé dans le dictionnaire et vrai sinon
         {
-            if (string.IsNullOrEmpty(mot)) return false;
-
-            string motMaj = mot.ToUpper(); // On s'assure que c'est bien en majuscule
-            int index = motMaj[0] - 'A';
-
-            // Vérif si c'est bien une lettre valide
-            if (index < 0 || index > 25) return false;
+            char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 
+            'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            };
+            int index=-1;//cette variabme nous permet de savoir dans quelle liste du tableau chercher le mot.
+            if (string.IsNullOrEmpty(mot)) return false; // Si le mot que le joueur entre est null ou vide alors on renvoie faux
+            string motMaj = mot.ToUpper();/**Le fichier dictionnaire a été donné avec tous les mots 
+            en majuscules, donc au moment de vérifier, il faut mettre le mot entré par le joueur
+            en majuscule pour qu'il puisse être trouvé dans le tableau de liste**/
+            for (int i = 0; i< 26; i++)
+            {
+                if(motMaj[0]==alphabet[i]) {index =i;break;}
+            }
+            if (index < 0 || index > 25) return false; /**On vérifie que l'index de notre 
+            première lettre du mot est bien comprise entre 0 et 25 soit les colonnes
+             possibles de notre tableau de liste.**/
 
             List<string> maListe = mots[index];
             if (maListe == null || maListe.Count == 0) return false;
-
-            // On lance la vraie recherche
-            return RechDichoInterne(maListe, motMaj, 0, maListe.Count - 1);
+            return RechDichoInterne(maListe, motMaj, 0, maListe.Count - 1); /**on ne peut pas
+            intialiser notre simple fonction avec une liste et un début et une fin au début
+            ducoup on utilise une autre fonction qui va elle faire à 100% une recherche dichotomique**/
         }
-
-        // Logique dichotomique
-        private bool RechDichoInterne(List<string> liste, string motCherche, int debut, int fin)
+ private bool RechDichoInterne(List<string> liste, string motCherche, int debut, int fin)
         {
-            if (debut > fin) return false; // Zone de recherche vide
-
-            int milieu = (debut + fin) / 2;
-
-            int comparaison = string.Compare(motCherche, liste[milieu]);
-
-            if (comparaison == 0) return true;
-
-            // Si le mot est avant dans l'alphabet, on cherche à gauche
-            if (comparaison < 0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);
-
-            // Sinon on cherche à droite
-            else return RechDichoInterne(liste, motCherche, milieu + 1, fin);
+            if (debut > fin) return false; //Si le début dépasse la fin, le mot n'est pas dans la liste
+            int milieu = (debut + fin) / 2; // On utilise le principe de la recherche dichotomique en divisant la liste en deux à chaque appel récursif
+            int comparaison = string.Compare(motCherche, liste[milieu]); /**string.Compare permet
+            de renvoyer une valeur par rapport au positionnement alphabétique de deux chaînes 
+            de caractères**/
+            if (comparaison==0) return true; //le cas où les deux mots sont égaux
+            else if (comparaison<0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);//le cas où le mot cherché est avant le mot du milieu 
+            else return RechDichoInterne(liste, motCherche, milieu + 1, fin); // le cas où le mot cherché est après le mot du milieu
         }
 
-        // Lance le tri sur toutes les lettres
-        public void TriParQuickSort()
+        private void TriParQuickSort(List<string> liste, int gauche, int droite)
+{
+    // Si la sous-liste a moins de 2 éléments, elle est déjà triée
+    if (gauche >= droite)
+    {
+        return;
+    }
+
+    // Choix du pivot : ici, on prend le dernier élément de la sous-liste
+    string pivot = liste[droite];
+    int pivotIndex = gauche;
+
+    // Partitionnement : on place les éléments plus petits que le pivot à gauche
+    for (int i = gauche; i < droite; i++)
+    {
+        // Si l'élément courant est inférieur ou égal au pivot
+        if (string.Compare(liste[i], pivot) <= 0)
         {
-            for (int i = 0; i < mots.Length; i++)
-            {
-                // On trie seulement s'il y a au moins 2 mots
-                if (mots[i] != null && mots[i].Count > 1)
-                {
-                    QuickSortInterne(mots[i], 0, mots[i].Count - 1);
-                }
-            }
+            // Échange les éléments pour les placer dans le bon ordre
+            string temp = liste[pivotIndex];
+            liste[pivotIndex] = liste[i];
+            liste[i] = temp;
+            pivotIndex++;
         }
+    }
 
-        private void QuickSortInterne(List<string> liste, int gauche, int droite)
-        {
-            // Optimisation : si la liste est toute petite, le tri par insertion est plus rapide que la récursion
-            if (droite - gauche <= 15)
-            {
-                if (gauche < droite) TriInsertion(liste, gauche, droite);
-                return;
-            }
+    // Place le pivot à sa position définitive
+    string tempPivot = liste[pivotIndex];
+    liste[pivotIndex] = liste[droite];
+    liste[droite] = tempPivot;
 
-            int pivotIndex = gauche;
-            string pivot = liste[droite]; // On prend le dernier comme pivot
-            string temp;
-
-            // Partitionnement
-            for (int i = gauche; i < droite; i++)
-            {
-                if (string.Compare(liste[i], pivot) <= 0)
-                {
-                    // Echange
-                    temp = liste[pivotIndex];
-                    liste[pivotIndex] = liste[i];
-                    liste[i] = temp;
-                    pivotIndex++;
-                }
-            }
-
-            // On met le pivot à sa place définitive
-            temp = liste[pivotIndex];
-            liste[pivotIndex] = liste[droite];
-            liste[droite] = temp;
-
-            // Appels récursifs
-            QuickSortInterne(liste, gauche, pivotIndex - 1);
-            QuickSortInterne(liste, pivotIndex + 1, droite);
-        }
-
-        // Tri simple utilisé quand les sous-listes deviennent petites
+    // Appels récursifs pour trier les sous-listes gauche et droite
+    TriParQuickSort(liste, gauche, pivotIndex - 1);
+    TriParQuickSort(liste, pivotIndex + 1, droite);
+}
         private void TriInsertion(List<string> liste, int debut, int fin)
         {
             for (int i = debut + 1; i <= fin; i++)
