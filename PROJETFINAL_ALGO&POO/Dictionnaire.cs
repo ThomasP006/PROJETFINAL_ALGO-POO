@@ -21,7 +21,7 @@ namespace PROJETFINAL_ALGO_POO
             {
                 if (mots[i] != null && mots[i].Count > 1)
                 {
-                    TriParQuickSort(mots[i], 0, mots[i].Count - 1); // On trie chaque liste du tableau avec le tri par quicksort
+                    quicksort(mots[i], 0, mots[i].Count - 1); // On trie chaque liste du tableau avec le tri par quicksort car c'est le tri le plus rapide 
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace PROJETFINAL_ALGO_POO
             intialiser notre simple fonction avec une liste et un début et une fin au début
             ducoup on utilise une autre fonction qui va elle faire à 100% une recherche dichotomique**/
         }
- private bool RechDichoInterne(List<string> liste, string motCherche, int debut, int fin)
+        private bool RechDichoInterne(List<string> liste, string motCherche, int debut, int fin)
         {
             if (debut > fin) return false; //Si le début dépasse la fin, le mot n'est pas dans la liste
             int milieu = (debut + fin) / 2; // On utilise le principe de la recherche dichotomique en divisant la liste en deux à chaque appel récursif
@@ -144,56 +144,33 @@ namespace PROJETFINAL_ALGO_POO
             else if (comparaison<0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);//le cas où le mot cherché est avant le mot du milieu 
             else return RechDichoInterne(liste, motCherche, milieu + 1, fin); // le cas où le mot cherché est après le mot du milieu
         }
+        
 
-        private void TriParQuickSort(List<string> liste, int gauche, int droite)
-{
-    // Si la sous-liste a moins de 2 éléments, elle est déjà triée
-    if (gauche >= droite)
-    {
-        return;
-    }
-
-    // Choix du pivot : ici, on prend le dernier élément de la sous-liste
-    string pivot = liste[droite];
-    int pivotIndex = gauche;
-
-    // Partitionnement : on place les éléments plus petits que le pivot à gauche
-    for (int i = gauche; i < droite; i++)
-    {
-        // Si l'élément courant est inférieur ou égal au pivot
-        if (string.Compare(liste[i], pivot) <= 0)
+             private void quicksort(List<string> liste, int indiceGauche, int indiceDroite)
         {
-            // Échange les éléments pour les placer dans le bon ordre
-            string temp = liste[pivotIndex];
-            liste[pivotIndex] = liste[i];
-            liste[i] = temp;
-            pivotIndex++;
-        }
-    }
-
-    // Place le pivot à sa position définitive
-    string tempPivot = liste[pivotIndex];
-    liste[pivotIndex] = liste[droite];
-    liste[droite] = tempPivot;
-
-    // Appels récursifs pour trier les sous-listes gauche et droite
-    TriParQuickSort(liste, gauche, pivotIndex - 1);
-    TriParQuickSort(liste, pivotIndex + 1, droite);
-}
-        private void TriInsertion(List<string> liste, int debut, int fin)
-        {
-            for (int i = debut + 1; i <= fin; i++)
+            if (indiceGauche >= indiceDroite) return;
+            string pivot = liste[indiceDroite];
+            int indicePivot = indiceGauche;
+            for (int i = indiceGauche; i < indiceDroite; i++)
             {
-                string cle = liste[i];
-                int j = i - 1;
-
-                while (j >= debut && string.Compare(liste[j], cle) > 0)
+             if (string.Compare(liste[i], pivot) <= 0)
                 {
-                    liste[j + 1] = liste[j];
-                    j--;
+                string C = liste[indicePivot];
+                liste[indicePivot] = liste[i];
+                liste[i] = C;
+                indicePivot++;
                 }
-                liste[j + 1] = cle;
             }
+
+            string D = liste[indicePivot];
+            liste[indicePivot] = liste[indiceDroite];
+            liste[indiceDroite] = D;
+
+            quicksort(liste, indiceGauche, indicePivot - 1);
+            quicksort(liste, indicePivot + 1, indiceDroite);
         }
+
+   
+       
     }
 }

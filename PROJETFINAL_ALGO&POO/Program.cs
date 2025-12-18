@@ -1,4 +1,4 @@
-﻿/**using System;
+﻿using System;
 
 namespace PROJETFINAL_ALGO_POO
 {
@@ -6,135 +6,77 @@ namespace PROJETFINAL_ALGO_POO
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Bienvenue dans le jeu des MOTS GLISSÉS ===\n");
+            // On nettoie la console pour commencer avec une page vierge
+            Console.Clear();
 
-            // 1. Créer les joueurs
-            Console.Write("Nom du Joueur 1 : ");
-            string nomJoueur1 = Console.ReadLine();
-            Joueur joueur1 = new Joueur(nomJoueur1);
+            // Affichage du titre du jeu avec des couleurs personnalisées
+            Console.ResetColor(); // On réinitialise les couleurs par défaut
+            Console.ForegroundColor = ConsoleColor.DarkRed; // On met le texte en rouge foncé
+            Console.BackgroundColor = ConsoleColor.DarkYellow; // On met le fond en jaune foncé
+            Console.WriteLine(@" __  __                    ____       _            _             _
+|  \/  | ___ _ __  _   _  |  _ \ _ __(_)_ __   ___(_)_ __   __ _| |
+| |\/| |/ _ \ '_ \| | | | | |_) | '__| | '_ \ / __| | '_ \ / _` | |
+| |  | |  __/ | | | |_| | |  __/| |  | | | | | (__| | |_) | (_| | |
+|_|  |_|\___|_| |_|\__,_| |_|   |_|  |_|_| |_|\___|_| .__/ \__,_|_|
+                                                    |_|            ");
 
-            Console.Write("Nom du Joueur 2 : ");
-            string nomJoueur2 = Console.ReadLine();
-            Joueur joueur2 = new Joueur(nomJoueur2);
+            // On réinitialise les couleurs pour revenir à la normale
+            Console.ResetColor();
 
-            // 2. Charger le dictionnaire
-            Dictionnaire dictionnaire = new Dictionnaire("MotsFrancais.txt");
+            // 1. On demande à l'utilisateur de créer le premier joueur
+            Console.Write("Quel sera bien le nom de notre premier concurrent ? Je le laisse saisir son nom : ");
+            string nom_joueur_un = Console.ReadLine(); // On lit le nom du premier joueur
+            Joueur joueur_un = new Joueur(nom_joueur_un); // On crée un objet Joueur pour le premier joueur
 
-            // 3. Demander à l'utilisateur s'il veut un plateau aléatoire ou depuis un fichier
-            Console.WriteLine("\nChoisissez le mode de génération du plateau :");
-            Console.WriteLine("1. Plateau généré aléatoirement");
-            Console.WriteLine("2. Plateau chargé depuis un fichier CSV");
-            Console.Write("Votre choix (1 ou 2) : ");
-            string choixPlateau = Console.ReadLine();
+            // On demande à l'utilisateur de créer le deuxième joueur
+            Console.Write("Qui sera donc l'adversaire du féroce " + nom_joueur_un + " ? Qu'il saisisse son nom : ");
+            string nom_joueur_deux = Console.ReadLine(); // On lit le nom du deuxième joueur
+            Joueur joueur_deux = new Joueur(nom_joueur_deux); // On crée un objet Joueur pour le deuxième joueur
 
-            Plateau plateau;
-
-            if (choixPlateau == "1")
-            {
-                // Générer un plateau aléatoire
-                plateau = new Plateau("Lettres.txt", 8, 8);
-                Console.WriteLine("\nPlateau généré aléatoirement :");
-            }
-            else if (choixPlateau == "2")
-            {
-                // Charger un plateau depuis un fichier CSV
-                Console.Write("Chemin du fichier CSV du plateau : ");
-                string cheminFichierPlateau = Console.ReadLine();
-                plateau = new Plateau(cheminFichierPlateau);
-                Console.WriteLine("\nPlateau chargé depuis le fichier :");
-            }
-            else
-            {
-                Console.WriteLine("Choix invalide. Génération d'un plateau aléatoire par défaut.");
-                plateau = new Plateau("Lettres.txt", 8, 8);
-            }
-
-            // Afficher le plateau initial
-            Console.WriteLine(plateau.ToString());
-
-            // 4. Créer le jeu
-            Jeu jeu = new Jeu(joueur1, joueur2, plateau, dictionnaire);
-
-            // 5. Démarrer la partie
-            Console.WriteLine("\nLa partie va commencer ! Appuyez sur une touche pour démarrer...");
-            Console.ReadKey();
-            jeu.DemarrerPartie();
-        }
-    }
-}**/
-using System;
-
-namespace PROJETFINAL_ALGO_POO
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Affichage du titre du jeu
-            Console.WriteLine("============================================");
-            Console.WriteLine("=== Bienvenue dans le jeu des MOTS GLISSÉS ===");
-            Console.WriteLine("============================================");
-            Console.WriteLine();
-
-            // 1. Créer les joueurs
-            Console.Write("Veuillez entrer le nom du Joueur 1 : ");
-            string nom_joueur_un = Console.ReadLine();
-            Joueur joueur_un = new Joueur(nom_joueur_un);
-
-            Console.Write("Veuillez entrer le nom du Joueur 2 : ");
-            string nom_joueur_deux = Console.ReadLine();
-            Joueur joueur_deux = new Joueur(nom_joueur_deux);
-
-            // Affichage des informations des joueurs
-            Console.WriteLine(joueur_un.toString());
-            Console.WriteLine(joueur_deux.toString());
-
-            // 2. Charger le dictionnaire
+            // 2. On charge le dictionnaire de mots pour vérifier les mots trouvés
             Dictionnaire dictionnaire = new Dictionnaire("Mots_Français.txt");
 
-            // Affichage des informations du dictionnaire
-            Console.WriteLine(dictionnaire.toString());
+            // 3. On demande à l'utilisateur comment il veut générer le plateau de jeu
+            Console.WriteLine("\nDe quelle manière les deux adversaires vont-ils vouloir jouer ? Ont-ils apporté leur plateau CSV en main propre ou veulent-ils jouer en terrain inconnu ?");
+            Console.WriteLine("\nQu'ils tapent 1 s'ils veulent un plateau généré aléatoirement");
+            Console.WriteLine("\nOu 2 s'ils veulent charger un plateau depuis un fichier CSV");
+            Console.Write("C'est votre choix: ");
+            string choix_plateau = Console.ReadLine(); // On lit le choix de l'utilisateur
 
-            // 3. Demander à l'utilisateur s'il veut un plateau aléatoire ou depuis un fichier
-            Console.WriteLine("\nChoisissez le mode de génération du plateau :");
-            Console.WriteLine("1. Plateau généré aléatoirement");
-            Console.WriteLine("2. Plateau chargé depuis un fichier CSV");
-            Console.Write("Votre choix (1 ou 2) : ");
-            string choix_plateau = Console.ReadLine();
-
-            Plateau plateau;
+            Plateau plateau; // On déclare une variable pour stocker le plateau
 
             if (choix_plateau == "1")
             {
-                // Générer un plateau aléatoire
+                // Si l'utilisateur choisit 1, on génère un plateau aléatoire
                 plateau = new Plateau("Lettres.txt", 8, 8);
                 Console.WriteLine("\nPlateau généré aléatoirement :");
             }
             else if (choix_plateau == "2")
             {
-                // Charger un plateau depuis un fichier CSV
-                Console.Write("Veuillez entrer le chemin du fichier CSV du plateau : ");
-                string chemin_fichier_plateau = Console.ReadLine();
+                // Si l'utilisateur choisit 2, on charge un plateau depuis un fichier CSV
+                Console.Write("Quel est donc le nom de votre fichier ? Je vous laisse le saisir : ");
+                string chemin_fichier_plateau = Console.ReadLine(); // On lit le chemin du fichier
                 plateau = new Plateau(chemin_fichier_plateau);
                 Console.WriteLine("\nPlateau chargé depuis le fichier :");
             }
             else
             {
+                // Si le choix est invalide, on génère un plateau aléatoire par défaut
                 Console.WriteLine("Choix invalide. Génération d'un plateau aléatoire par défaut.");
                 plateau = new Plateau("Lettres.txt", 8, 8);
             }
 
-            // Affichage du plateau initial
+            // On affiche le plateau de jeu initial
             Console.WriteLine("\nVoici le plateau de jeu :");
             Console.WriteLine(plateau.ToString());
 
-            // 4. Créer le jeu
+            // 4. On crée une instance du jeu avec les joueurs, le plateau et le dictionnaire
             Jeu jeu = new Jeu(joueur_un, joueur_deux, plateau, dictionnaire);
 
-            // 5. Démarrer la partie
-            Console.WriteLine("\nLa partie va commencer ! Appuyez sur une touche pour démarrer...");
-            Console.ReadKey();
-            jeu.DemarrerPartie();
+            // 5. On démarre la partie
+            Console.WriteLine("\nLa partie va commencer !\nC'est à la guerre que partent nos deux adversaires du jour ! C'est parti !\nAppuyez sur une touche pour démarrer...");
+            Console.ReadKey(); // On attend que l'utilisateur appuie sur une touche pour commencer
+            jeu.DemarrerPartie(); // On démarre la partie
         }
     }
 }
