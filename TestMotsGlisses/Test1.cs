@@ -18,15 +18,15 @@ namespace TestMotsGlisses
             FichierDicoTest = Path.Combine(Path.GetTempPath(), $"test_dico_{Guid.NewGuid()}.txt");
             FichierPlateauTest = Path.Combine(Path.GetTempPath(), $"test_plateau_{Guid.NewGuid()}.csv");
 
-            // On crée un tableau de 26 lignes (une pour chaque lettre)
+            /// On crée un tableau de 26 lignes (une pour chaque lettre)
             string[] lignesDico = new string[26];
-            for (int i = 0; i < 26; i++) lignesDico[i] = ""; // On initialise tout à vide
+            for (int i = 0; i < 26; i++) lignesDico[i] = ""; /// On initialise tout à vide
 
-            // On place les mots sur les lignes correspondantes aux lettres
-            lignesDico[0] = "ABRICOT ARBRE"; // Index 0 = A
-            lignesDico[1] = "BANANE";        // Index 1 = B
-            lignesDico[2] = "CERISE";        // Index 2 = C
-            lignesDico[25] = "ZOO";          // Index 25 = Z
+            /// On place les mots sur les lignes correspondantes aux lettres
+            lignesDico[0] = "ABRICOT ARBRE"; /// Index 0 = A
+            lignesDico[1] = "BANANE";        /// Index 1 = B
+            lignesDico[2] = "CERISE";        /// Index 2 = C
+            lignesDico[25] = "ZOO";          /// Index 25 = Z
 
             File.WriteAllLines(FichierDicoTest, lignesDico);
 
@@ -112,10 +112,10 @@ namespace TestMotsGlisses
         {
             string fichierTestRecherche = Path.Combine(Path.GetTempPath(), $"recherche_{Guid.NewGuid()}.csv");
 
-            // On construit un plateau où le mot "MOT" commence en bas (M) et monte (O, puis T)
-            // Ligne 0 : T , X , X
-            // Ligne 1 : O , X , X
-            // Ligne 2 : M , X , X
+            /// On construit un plateau où le mot "MOT" commence en bas et monte
+            /// Ligne 0 : T , X , X
+            /// Ligne 1 : O , X , X
+            /// Ligne 2 : M , X , X
             File.WriteAllLines(fichierTestRecherche, new string[]
             {
                 "T,X,X",
@@ -129,11 +129,11 @@ namespace TestMotsGlisses
 
                 List<Position> resultat = plateau.RechercherMot("MOT");
 
-                // Le test devrait maintenant réussir car le M est sur la base (ligne 2)
+                /// Le test devrait maintenant réussir car le M est sur la base (ligne 2)
                 Assert.IsNotNull(resultat, "Le mot MOT n'a pas été trouvé alors qu'il part de la base.");
                 Assert.AreEqual(3, resultat.Count);
 
-                // Vérification qu'un mot qui ne part pas de la base n'est pas trouvé
+                /// Vérification qu'un mot qui ne part pas de la base n'est pas trouvé
                 List<Position> resultatInexistant = plateau.RechercherMot("RIZ");
                 Assert.IsNull(resultatInexistant);
             }

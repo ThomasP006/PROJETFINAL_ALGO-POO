@@ -6,22 +6,22 @@ namespace PROJETFINAL_ALGO_POO
 {
     public class Dictionnaire
     {
-        // -----on initialise d'abord les attributs-----
+        /// -----on initialise d'abord les attributs-----
         private List<string>[] mots;
-        /**Cet attribut est un tableau de listes.
+        /**Cet attribut est un tableau de listes
          Chaque liste correspondera plus tard à une lettre de l'alphabet
          Il y aura donc 26 listes au total**/
-       
-        // -----on fait le constructeur-----
+
+        /// -----on fait le constructeur-----
         public Dictionnaire(string nomdufichier)
         {
-            this.mots = new List<string>[26]; // Comme dit plus haut on veut un tableau de 26 listes pour chaque lettre de l'alphabet
-            InitialiserLeDictionnaire(nomdufichier); // On utilise la fonction que l'on a créer plus bas pour charger chaque mot du fichier dans notre tableau de liste
+            this.mots = new List<string>[26]; /// Comme dit plus haut on veut un tableau de 26 listes pour chaque lettre de l'alphabet
+            InitialiserLeDictionnaire(nomdufichier); /// On utilise la fonction que l'on a créer plus bas pour charger chaque mot du fichier dans notre tableau de liste
             for (int i = 0; i < 26; i++)
             {
                 if (mots[i] != null && mots[i].Count > 1)
                 {
-                    quicksort(mots[i], 0, mots[i].Count - 1); // On trie chaque liste du tableau avec le tri par quicksort car c'est le tri le plus rapide 
+                    quicksort(mots[i], 0, mots[i].Count - 1); /// On trie chaque liste du tableau avec le tri par quicksort car c'est le tri le plus rapide 
                 }
             }
         }
@@ -61,17 +61,17 @@ namespace PROJETFINAL_ALGO_POO
                         ou de les ajouters à notre liste selon si le caractère observé est une lettre 
                         ,et dans ce cas là il appartient encore à notre mot, ou si c'est un espace**/
                         {
-                            if (c != ' ') // Dans le cas où le caractère n'est pas un espace
+                            if (c != ' ') /// Dans le cas où le caractère n'est pas un espace
                             {
-                                motEnCours += c; // On ajoute le caractère à notre mot 
+                                motEnCours += c; /// On ajoute le caractère à notre mot 
                             }
-                            else // Dans le cas où le caractère est un espace
+                            else /// Dans le cas où le caractère est un espace
                             {
                                 if (!string.IsNullOrEmpty(motEnCours)) /**Si le mot que l'on a construit n'est pas 
                                 un espace(dans le cas où il y aurait plusieurs espaces entre les mots dans le fichier)**/
                                 {
-                                    mots[compteurLigne].Add(motEnCours.ToUpper()); // On ajoute le mot à la liste
-                                    motEnCours = ""; // On va reconstruire un mot après notre espace donc on remet la variable à vide.
+                                    mots[compteurLigne].Add(motEnCours.ToUpper()); /// On ajoute le mot à la liste
+                                    motEnCours = ""; /// On va reconstruire un mot après notre espace donc on remet la variable à vide
                                 }
                             }
                         }
@@ -80,7 +80,7 @@ namespace PROJETFINAL_ALGO_POO
                             mots[compteurLigne].Add(motEnCours.ToUpper()); 
                         }
 
-                        compteurLigne++; // on incrémente notre compteur pour passer à la lettre suivante de l'alphabet 
+                        compteurLigne++; /// on incrémente notre compteur pour passer à la lettre suivante de l'alphabet 
                     }
                 }
             }
@@ -95,27 +95,27 @@ namespace PROJETFINAL_ALGO_POO
             char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 
             'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
             };
-            string resultat = "La langue de notre dictionnaire est en francais.\nVoici le nombre de mots par lettre :\n"; // On veut afficher le nombre de lettre par mot des listes et la langue.
-            for (int i = 0; i < mots.Length; i++) // La boucle va permettre de passer par chaque mot du tableau donc du dictionnaire
+            string resultat = "La langue de notre dictionnaire est en francais.\nVoici le nombre de mots par lettre :\n"; /// On veut afficher le nombre de lettre par mot des listes et la langue
+            for (int i = 0; i < mots.Length; i++) /// La boucle va permettre de passer par chaque mot du tableau donc du dictionnaire
             {
-                char lettre = alphabet[i]; // on initialise une varibale qui récupère les lettres de l'alphabet
-                int nombreMots; // Cette variable va prendre le nombre de mot contenus par liste donc par lettre de l'alphabet
-                if (mots[i] != null) nombreMots = mots[i].Count; // Si la liste n'est pas vide on compte le nombre d'élements 
-                else nombreMots = 0; //sinon comme la liste est vide cette lettre de l'alphabet ne contient aucun mot dans le dictionnaire
+                char lettre = alphabet[i]; /// on initialise une varibale qui récupère les lettres de l'alphabet
+                int nombreMots; /// Cette variable va prendre le nombre de mot contenus par liste donc par lettre de l'alphabet
+                if (mots[i] != null) nombreMots = mots[i].Count; /// Si la liste n'est pas vide on compte le nombre d'élements 
+                else nombreMots = 0; ///sinon comme la liste est vide cette lettre de l'alphabet ne contient aucun mot dans le dictionnaire
                 resultat += "Lettre " + lettre + " : " + nombreMots + " mots\n";/**On ajoute à
                 l'affichage la lettre et le nombre de mots associés**/
             }
-            return resultat; // On retourne l'affichage
+            return resultat; /// On retourne l'affichage
         }
 
-        public bool RechDichoRecursif(string mot) //Fonction de recherche dichotomique comme demandé.
-        //On renvoie faux si le mot qu'a entré le joueur n'est pastrouvé dans le dictionnaire et vrai sinon
+        public bool RechDichoRecursif(string mot) ///Fonction de recherche dichotomique comme demandé.
+                                                  ///On renvoie faux si le mot qu'a entré le joueur n'est pastrouvé dans le dictionnaire et vrai sinon
         {
             char[] alphabet = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 
             'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
             };
-            int index=-1;//cette variabme nous permet de savoir dans quelle liste du tableau chercher le mot.
-            if (string.IsNullOrEmpty(mot)) return false; // Si le mot que le joueur entre est null ou vide alors on renvoie faux
+            int index=-1;///cette variabme nous permet de savoir dans quelle liste du tableau chercher le mot.
+            if (string.IsNullOrEmpty(mot)) return false; /// Si le mot que le joueur entre est null ou vide alors on renvoie faux
             string motMaj = mot.ToUpper();/**Le fichier dictionnaire a été donné avec tous les mots 
             en majuscules, donc au moment de vérifier, il faut mettre le mot entré par le joueur
             en majuscule pour qu'il puisse être trouvé dans le tableau de liste**/
@@ -135,18 +135,18 @@ namespace PROJETFINAL_ALGO_POO
         }
         private bool RechDichoInterne(List<string> liste, string motCherche, int debut, int fin)
         {
-            if (debut > fin) return false; //Si le début dépasse la fin, le mot n'est pas dans la liste
-            int milieu = (debut + fin) / 2; // On utilise le principe de la recherche dichotomique en divisant la liste en deux à chaque appel récursif
+            if (debut > fin) return false; ///Si le début dépasse la fin, le mot n'est pas dans la liste
+            int milieu = (debut + fin) / 2; /// On utilise le principe de la recherche dichotomique en divisant la liste en deux à chaque appel récursif
             int comparaison = string.Compare(motCherche, liste[milieu]); /**string.Compare permet
             de renvoyer une valeur par rapport au positionnement alphabétique de deux chaînes 
             de caractères**/
-            if (comparaison==0) return true; //le cas où les deux mots sont égaux
-            else if (comparaison<0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);//le cas où le mot cherché est avant le mot du milieu 
-            else return RechDichoInterne(liste, motCherche, milieu + 1, fin); // le cas où le mot cherché est après le mot du milieu
+            if (comparaison==0) return true; ///le cas où les deux mots sont égaux
+            else if (comparaison<0) return RechDichoInterne(liste, motCherche, debut, milieu - 1);///le cas où le mot cherché est avant le mot du milieu 
+            else return RechDichoInterne(liste, motCherche, milieu + 1, fin); /// le cas où le mot cherché est après le mot du milieu
         }
-        
 
-             private void quicksort(List<string> liste, int indiceGauche, int indiceDroite)
+
+        private void quicksort(List<string> liste, int indiceGauche, int indiceDroite) /// On utilise une fonction de tri rapide pour trier les listes de mots dans le dictionnaire
         {
             if (indiceGauche >= indiceDroite) return;
             string pivot = liste[indiceDroite];

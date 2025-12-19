@@ -9,46 +9,58 @@ using System.Threading.Tasks;
 
 namespace PROJETFINAL_ALGO_POO
 {
-    public class Joueur // on commence par créer la classe Joueur
+    /// Cette class sert à représenter un participant au jeu
+    /// Elle contient tout ce qui le concerne : son nom, son score actuel et la liste des mots qu'il a réussi à trouver
+    public class Joueur
     {
-        // on initialise ses attributs en privés
-        private string nom; // énoncé : "Un joueur est caractérisé par son nom, par les mots trouvés et les scores par plateau au cours de la partie"
-        private List <string> mots_trouvés;
+        /// Ici, on déclare les attributs en privé pour qu'ils ne soient pas modifiés directement de l'extérieur
+        private string nom;
+        private List<string> mots_trouvés;
         private int scores_plateau;
 
-
-        //La création d’un joueur n’est possible que si celui-ci a un nom au départ du jeu
+        /// C'est le constructeur qui permet de créer un nouveau joueur
+        /// On vérifie d'abord si le nom donné est valide. Si ce n'est pas le cas, on lui donne un nom par défaut
+        /// Ensuite, on initialise son score à 0 et sa liste de mots à null pour commencer proprement
         public Joueur(string nom)
         {
-            if(nom==null|| nom==""||nom==" ") // on met les cas d'erreurs ou le nom entré par le joueur est invalide
-        {
-            Console.WriteLine("Il y a une erreur, le nom du joueur est vide. On l'initialise donc par défaut"); 
-            nom = "Joueur_par_défaut"; 
-        }
-            this.nom = nom;  // on initalise le nom du joueur avec le nom donné en paramètre
-            this.mots_trouvés = null; // la liste doit être intialisée à null
-            this.scores_plateau = 0; // le score doit etre intialisé à 0 d'après l'énoncé
+            if (nom == null || nom == "" || nom == " ")
+            {
+                Console.WriteLine("Il y a une erreur, le nom du joueur est vide. On l'initialise donc par défaut");
+                nom = "Joueur_par_défaut";
+            }
+            this.nom = nom;
+            this.mots_trouvés = null;
+            this.scores_plateau = 0;
         }
 
-        // on met les propriétés en lecture des attributs pour que celle ci soit observable depuis d'autres classes car ls attributs de la classe sont en privés
+        /// Permet de lire le nom du joueur depuis l'extérieur de la classe en lecture seule
         public string Nom
         {
-            get { return nom; } 
+            get { return nom; }
         }
-        public List <string> Mots_trouvés
+
+        /// Permet d'accéder à la liste des mots trouvés par le joueur en lecture seule
+        public List<string> Mots_trouvés
         {
-            get { return mots_trouvés; }    
+            get { return mots_trouvés; }
         }
+
+        /// Permet de consulter le score actuel du joueur en lecture seule
         public int Scores_plateau
         {
             get { return scores_plateau; }
         }
-        public void Add_Mot (string mot) // Cette classe nout a été demandée dans l'énoncé
+
+        /// Cette méthode sert à ajouter un mot trouvé par le joueur dans sa liste personnelle
+        /// Si c'est le tout premier mot ,donc que la liste est vide/null, on prend soin de créer la liste avant d'ajouter le mot dedans
+        public void Add_Mot(string mot)
         {
-            if (this.mots_trouvés==null) this.mots_trouvés=new List<string>(); // la liste est initialisée à null mais on ne peut pas ajouter de mot dans ce cas. 
-            //On crée donc une nouvelle liste auquel on peut attribuer des valeurs
-            this.mots_trouvés.Add(mot); // j'utilise la propriété .Add des listes pour ajouter le mot entré en paramètre
+            if (this.mots_trouvés == null) this.mots_trouvés = new List<string>();
+            this.mots_trouvés.Add(mot);
         }
+
+        /// Cette fonction génère une phrase complète pour décrire le joueur
+        /// Elle affiche son nom, son score, et fait la liste de tous les mots trouvés s'il y en a
         public string toString()
         {
             string phrase = "Le joueur s'appelle : " + this.nom + "\n";
@@ -67,19 +79,24 @@ namespace PROJETFINAL_ALGO_POO
             }
             return phrase;
         }
+
+        /// Méthode simple pour augmenter le score du joueur
+        /// On prend la valeur donnée en paramètre et on l'ajoute au score total
         public void Add_Score(int val)
         {
-            this.scores_plateau += val; //j'ajoute simplement le nombre de points entré en paramètre à mon score total
+            this.scores_plateau += val;
         }
+
+        /// Cette méthode vérifie si le joueur a déjà trouvé un mot spécifique
+        /// On parcourt toute sa liste de mots trouvés. Si on le trouve, on renvoie vrai, sinon on renvoie faux
         public bool Contient(string mot)
         {
-            // Si la liste n'est pas encore créée, elle ne peut pas contenir le mot -> Faux
             if (this.mots_trouvés == null) return false;
-            for( int i = 0; i< this.mots_trouvés.Count; i++) //le for va vérifier chaque valeur de la liste pour voir si elle correspond au mot recherché
+            for (int i = 0; i < this.mots_trouvés.Count; i++)
             {
-                if (this.mots_trouvés[i] == mot) return true;  // elle  retourne vrai si on on observe que le mot est trouvé une fois dans liste 
+                if (this.mots_trouvés[i] == mot) return true;
             }
-            return false; //elle retourne faux si arrivé à la fin de la liste on a pas trouvé.
+            return false;
         }
     }
 }
