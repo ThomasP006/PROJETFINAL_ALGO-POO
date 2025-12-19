@@ -36,7 +36,7 @@ namespace PROJETFINAL_ALGO_POO
             Dictionary<char, int> frequences_max_par_lettre = new Dictionary<char, int>(); /** ON 
             créee un dictionnaire qui va stocker les lettres et les fréquences maximales pour chacune**/
             foreach (string ligne in lignes_du_fichier) /** On parcourt chaque ligne du 
-            fichier puis on sépare les lettres de leur fréquence max en enlevant 
+            fichier puis on sépare les lettres de leur fréquence max en enlevant
             la virgule et on les stocke dans le dictionnaire**/
             {
                 string[] elements = ligne.Split(','); /** On crée un tableau qui sépare
