@@ -10,11 +10,11 @@ namespace PROJETFINAL_ALGO_POO
         private Joueur joueur_un; // Il y a déjà deux joueurs pour jouer
         private Joueur joueur_deux;
         private Plateau plateau_de_jeu; // Un plateau que l'on a déjà créé dans la classe Plateau
-        private Dictionnaire dictionnaire_de_mots; // Un dictionnaire qui nous permet de vérifier les mots entrés
+        private Dictionnaire dictionnaireMots; // Un dictionnaire qui nous permet de vérifier les mots entrés
         private DateTime heure_de_debut_partie; // L'heure de début de la partie
         private TimeSpan duree_totale_partie = TimeSpan.FromMinutes(2); // Une durée de jeu totale de 2 minutes
         private TimeSpan duree_par_tour = TimeSpan.FromSeconds(20); // Une durée de tour par joueur de 20 secondes
-        private Dictionary<char, int> poids_des_lettres; // Dictionnaire pour stocker le poids (score) de chaque lettre
+        private Dictionary<char, int> poids_lettres; // Dictionnaire pour stocker le poids (score) de chaque lettre
 
         // Pour jouer au jeu, il faut deux joueurs, un plateau et un dictionnaire, c'est pour ça qu'on fait le constructeur de la classe à partir de ces attributs
         public Jeu(Joueur joueur1, Joueur joueur2, Plateau plateau, Dictionnaire dictionnaire)
@@ -22,21 +22,21 @@ namespace PROJETFINAL_ALGO_POO
             joueur_un = joueur1; // On assigne le premier joueur
             joueur_deux = joueur2; // On assigne le deuxième joueur
             plateau_de_jeu = plateau; // On assigne le plateau de jeu
-            dictionnaire_de_mots = dictionnaire; // On assigne le dictionnaire de mots
+            dictionnaireMots  = dictionnaire; // On assigne le dictionnaire de mots
             ChargerPoidsDesLettres("Lettres.txt"); // On charge les poids des lettres depuis un fichier
         }
 
         // Méthode pour charger les poids des lettres depuis un fichier
         private void ChargerPoidsDesLettres(string chemin_du_fichier)
         {
-            poids_des_lettres = new Dictionary<char, int>(); // On initialise le dictionnaire des poids des lettres
+            poids_lettres = new Dictionary<char, int>(); // On initialise le dictionnaire des poids des lettres
             string[] lignes_du_fichier = File.ReadAllLines(chemin_du_fichier); // On lit toutes les lignes du fichier
             foreach (string ligne in lignes_du_fichier) // On parcourt chaque ligne du fichier
             {
                 string[] elements_ligne = ligne.Split(','); // On sépare chaque ligne en éléments en utilisant la virgule comme séparateur
                 char lettre = elements_ligne[0][0]; // On récupère la lettre (premier élément de la première sous-chaîne)
                 int poids = int.Parse(elements_ligne[2]); // On récupère le poids de la lettre (troisième élément)
-                poids_des_lettres[lettre] = poids; // On ajoute la lettre et son poids au dictionnaire
+                poids_lettres[lettre] = poids; // On ajoute la lettre et son poids au dictionnaire
             }
         }
 
@@ -100,7 +100,7 @@ namespace PROJETFINAL_ALGO_POO
                     continue; // On recommence le tour
                 }
 
-                if (!dictionnaire_de_mots.RechDichoRecursif(mot_propose)) // Si le mot n'est pas dans le dictionnaire
+                if (!dictionnaireMots.RechDichoRecursif(mot_propose)) // Si le mot n'est pas dans le dictionnaire
                 {
                     Console.WriteLine("Ce mot n'est pas dans le dictionnaire !"); // On informe le joueur
                     Console.ReadKey(); // On attend que le joueur appuie sur une touche
@@ -136,8 +136,8 @@ namespace PROJETFINAL_ALGO_POO
             int score_total = 0; // On initialise le score total à 0
             foreach (char lettre in mot) // Pour chaque lettre du mot
             {
-                if (poids_des_lettres.ContainsKey(lettre)) // Si la lettre a un poids défini
-                    score_total += poids_des_lettres[lettre]; // On ajoute le poids de la lettre au score total
+                if (poids_lettres.ContainsKey(lettre)) // Si la lettre a un poids défini
+                    score_total += poids_lettres[lettre]; // On ajoute le poids de la lettre au score total
             }
             return score_total * mot.Length; // On retourne le score total multiplié par la longueur du mot
         }

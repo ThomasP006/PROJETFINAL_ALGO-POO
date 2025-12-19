@@ -9,8 +9,6 @@ namespace PROJETFINAL_ALGO_POO
             // On nettoie la console pour commencer avec une page vierge
             Console.Clear();
 
-            // Affichage du titre du jeu avec des couleurs personnalisées
-            Console.ResetColor(); // On réinitialise les couleurs par défaut
             Console.ForegroundColor = ConsoleColor.DarkRed; // On met le texte en rouge foncé
             Console.BackgroundColor = ConsoleColor.DarkYellow; // On met le fond en jaune foncé
             Console.WriteLine(@" __  __                    ____       _            _             _
@@ -20,8 +18,6 @@ namespace PROJETFINAL_ALGO_POO
 |_|  |_|\___|_| |_|\__,_| |_|   |_|  |_|_| |_|\___|_| .__/ \__,_|_|
                                                     |_|            ");
 
-            // On réinitialise les couleurs pour revenir à la normale
-            Console.ResetColor();
 
             // 1. On demande à l'utilisateur de créer le premier joueur
             Console.Write("Quel sera bien le nom de notre premier concurrent ? Je le laisse saisir son nom : ");
